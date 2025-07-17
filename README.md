@@ -718,6 +718,17 @@ Built with the power of **Multi-Model AI** collaboration 🤝
 - [Gemini 2.5 Pro & 2.0 Flash](https://ai.google.dev/) - Extended thinking & fast analysis
 - [OpenAI O3](https://openai.com/) - Strong reasoning & general intelligence
 
+### Authentication
+
+Use the `auth_cli.py` helper to store credentials for providers. Run:
+
+```bash
+python scripts/auth_cli.py login
+```
+
+Then select the provider and follow the prompts. Credentials are saved to
+`~/.local/share/zen-mcp-server/auth.json`.
+
 ### Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=BeehiveInnovations/zen-mcp-server&type=Date)](https://www.star-history.com/#BeehiveInnovations/zen-mcp-server&Date)
