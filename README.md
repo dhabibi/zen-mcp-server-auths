@@ -50,6 +50,7 @@ Because these AI models [clearly aren't when they get chatty →](docs/ai_banter
 
 - **Getting Started**
   - [Quickstart](#quickstart-5-minutes) - Get running in 5 minutes
+  - [Authentication](#authentication) - OAuth setup for Anthropic and GitHub Copilot
   - [Available Tools](#available-tools) - Overview of all tools
   - [AI-to-AI Conversations](#ai-to-ai-conversation-threading) - Multi-turn conversations
 
@@ -282,6 +283,23 @@ cd zen-mcp-server
 **Windows users:** Using WSL? See the [WSL Setup Guide](docs/wsl-setup.md) for detailed instructions.
 
 ### 3. Add Your API Keys
+
+**Option A: OAuth Authentication (Recommended)**
+
+For a streamlined authentication experience, use the built-in OAuth helper:
+
+```bash
+# Use the interactive authentication CLI
+python scripts/auth_cli.py
+
+# Follow the prompts to authenticate with:
+# 1. Anthropic (Claude API) - OAuth with PKCE flow
+# 2. GitHub Copilot - Device authorization flow
+```
+
+This will securely store your credentials in `~/.local/share/zen-mcp-server/auth.json` with proper file permissions (0600).
+
+**Option B: Environment Variables**
 
 ```bash
 # Edit .env to add your API keys (if not already set in environment)
@@ -672,6 +690,62 @@ This server enables **true AI collaboration** between Claude and multiple AI mod
 
 **[📖 Read More](docs/ai-collaboration.md)** - Multi-model coordination, conversation threading, and collaborative workflows
 
+
+## Authentication
+
+Zen MCP Server supports secure OAuth authentication for major AI providers, inspired by the OpenCode authentication system. This provides a streamlined way to authenticate with providers without storing API keys in plain text.
+
+### OAuth Authentication
+
+Use the built-in authentication CLI to securely authenticate with supported providers:
+
+```bash
+python scripts/auth_cli.py
+```
+
+**Supported Providers:**
+- **Anthropic (Claude API)**: OAuth with PKCE flow for secure API key generation
+- **GitHub Copilot**: Device authorization flow for accessing Copilot API tokens
+
+**Features:**
+- **Secure Storage**: Credentials stored in `~/.local/share/zen-mcp-server/auth.json` with restricted file permissions (0600)
+- **Automatic Token Refresh**: Handles token expiration and refresh automatically
+- **XDG Standards**: Respects XDG_DATA_HOME environment variable for cross-platform compatibility
+- **Modern Implementation**: Built with httpx, comprehensive error handling, and type safety
+
+### Authentication Flow
+
+**For Anthropic (Claude API):**
+1. Run `python scripts/auth_cli.py` and select Anthropic
+2. Open the provided OAuth URL in your browser
+3. Complete the authorization flow
+4. Copy the `code` and `state` parameters from the callback URL
+5. Enter them into the CLI to complete authentication
+
+**For GitHub Copilot:**
+1. Run `python scripts/auth_cli.py` and select GitHub Copilot
+2. Visit the provided device authorization URL
+3. Enter the device code shown in the CLI
+4. The CLI will automatically poll for completion and retrieve your Copilot API token
+
+### Token Management
+
+The authentication system automatically handles:
+- **Token Refresh**: Expired tokens are automatically refreshed
+- **Secure Storage**: All tokens stored with proper file permissions
+- **Error Handling**: Graceful handling of authentication failures
+- **Cross-Platform**: Works on macOS, Linux, and Windows (WSL)
+
+### Manual API Key Configuration
+
+If you prefer to use environment variables instead of OAuth:
+
+```env
+# Alternative: Use environment variables
+GEMINI_API_KEY=your-gemini-key
+OPENAI_API_KEY=your-openai-key
+DIAL_API_KEY=your-dial-key
+```
 
 ## Configuration
 
